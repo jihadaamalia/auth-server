@@ -1,0 +1,21 @@
+{
+  "name": "login_backend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "atob": "^2.0.3",
+    "body-parser": "^1.16.1",
+    "cors": "^2.8.3",
+    "cryptr": "^2.0.0",
+    "dotenv": "^4.0.0",
+    "ejs": "*",
+    "express": "4.8.7",
+    "jsonwebtoken": "^7.4.1",
+    "mysql": "^2.13.0",
+    "nodemailer": "^4.6.2",
+    "nodemailer-express-handlebars": "^3.0.0"
+  }
+}
