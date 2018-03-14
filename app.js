@@ -3,7 +3,6 @@
 */
  
 var express = require('express')
-  , user = require('./controllers/userController')
   , http = require('http')
   , path = require('path');
 var cors = require('cors');
@@ -47,19 +46,8 @@ app.use(function(req, res, next) {
 * routes.
 */
 
-app.get("/",function(req,res){
-        res.json({"Message" : "Hello World !"});
-});
-app.post('/signup', user.signup);
-app.post('/signin', user.signin);
-app.post('/check_user',user.check_user);
-app.post('/verify_access', user.verify);
-app.route('/forgot_password')
-    .get(user.render_forgot_password_template)
-    .post(user.forgot_password);
-app.route('/reset_password')
-    .get(user.render_reset_password_template)
-    .post(user.reset_password);
+var routes = require('./routes/userRoutes'); //to get something which located in the same forlder with the caller file folder
+routes(app);
 
 /**
 * creating server.
