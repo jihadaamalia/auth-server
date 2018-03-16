@@ -83,7 +83,6 @@ exports.reset_password = function(req, res, next) {
     var resetEmail = cryptr.decrypt(req.body.token);
     var dec_pass = atob(req.body.newPassword);
     var encrypted_pass = cryptr.encrypt(dec_pass);
-
     var password_reset = "UPDATE `user` SET `password` = '"+encrypted_pass+"' WHERE `email`= '"+resetEmail+"'";
     var query = db.query(password_reset, function(err, result){
         if(err){
@@ -93,7 +92,7 @@ exports.reset_password = function(req, res, next) {
             res.end();
         }
         else{
-            var sql_get = "SELECT * FROM `user` WHERE `email`= '"+resetEmail+"'";
+            var sql_get = "SELECT * FROM user_profile JOIN user ON user_profile.username = user.username WHERE email= '"+resetEmail+"'";
             var query = db.query(sql_get, function(err, result){
                 if(!err) {
                     var data = {
