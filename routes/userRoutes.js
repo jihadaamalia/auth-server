@@ -13,7 +13,7 @@ module.exports = function(app) {
 
   	//signUp
     app.post('/signup_user', signup.user); //signup user + user_profile
-    app.post('/check_user',user.check_user); //check username availability
+    app.post('/check_username',signup.check_username); //check username availability
 
     //signIn
 	app.post('/signin', signin.user);

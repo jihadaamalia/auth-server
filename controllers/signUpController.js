@@ -54,14 +54,22 @@ exports.user=function(req , res){
 
 };
 
-exports.pet =function(req , res){
-    res.json({
-        "status": "user added",
-    });
-};
 
-exports.preference =function(req , res){
-    res.json({
-        "status": "user added",
+exports.check_username=function(req, res){
+    var username =req.body.username;
+    var sql_username = "SELECT * FROM `user` WHERE `username`= '"+username+"'";
+    var query = db.query(sql_username, function(err, result){
+        if(result == ""){
+            res.json({
+                "results": "available"
+            });
+            res.end();
+        }
+        else{
+            res.json({
+                "results": "not available"
+            });
+            res.end();
+        }
     });
 };
