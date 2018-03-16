@@ -4,7 +4,7 @@
 require('dotenv').config();
 var jwt = require('jsonwebtoken');
 var atob = require('atob');
-var Cryptr = require('cryptr')
+var Cryptr = require('cryptr');
 cryptr = new Cryptr(process.env.CRYPTER_KEY);
 
 //---------------------------------------login services----------------------------------------------------------
