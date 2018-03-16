@@ -1,3 +1,14 @@
+#user
+CREATE TABLE `user` (
+  `username` varchar(20) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 #user_profile
 CREATE TABLE `user_profile` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
@@ -9,24 +20,15 @@ CREATE TABLE `user_profile` (
   `city` int(5) NOT NULL,
   `street` varchar(100) DEFAULT NULL,
   `photo` longblob,
+  `username` varchar(20) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-   PRIMARY KEY (`id`)
+   PRIMARY KEY (`id`),
+   CONSTRAINT FK_userUser_profile FOREIGN KEY (`username`) REFERENCES user(`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-#user
-CREATE TABLE `user` (
-  `username` varchar(20) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `user_id` int(5) NOT NULL,
-  `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`username`),
-  CONSTRAINT FK_userUser_profile FOREIGN KEY (`user_id`) REFERENCES user_profile(`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 #pet
 CREATE TABLE `pet` (

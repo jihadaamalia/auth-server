@@ -3,6 +3,7 @@
 module.exports = function(app) {
  	var user = require('../controllers/userController'); //to get something outside the caller file folder
     var signup = require('../controllers/signUpController');
+    var signin = require('../controllers/signInController');
 
   	app.get("/",function(req,res){
 	        res.json({"Message" : "Hello World !"});
@@ -10,11 +11,9 @@ module.exports = function(app) {
 
   	//signUp
     app.post('/signup_user', signup.user); //signup user + user_profile
-    app.post('/signup_pet', signup.pet); //signup pet
-    app.post('/input_preference', signup.preference); //input preference
 
     //signIn
-	app.post('/signin', user.signin);
+	app.post('/signin', signin.user);
 
 	app.post('/check_user',user.check_user);
 

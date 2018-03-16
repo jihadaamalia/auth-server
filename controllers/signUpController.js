@@ -6,57 +6,52 @@ var jwt = require('jsonwebtoken');
 var atob = require('atob');
 var Cryptr = require('cryptr');
 cryptr = new Cryptr(process.env.CRYPTER_KEY);
+var signIn = require('./signInController');
 
 
 /**
  * SIGNUP SERVICES
  */
 exports.user=function(req , res){
-    var contohJSONLOGIN = {
-        "userProf": {
-            "name": "Arina Haq",
-            "user_dob": "2000-07-08",
-            "sex": "f",
-            "country": 1, //kemungkinan otomatis ke parse jd string
-            "province": 10,  //kemungkinan otomatis ke parse jd string
-            "city": 200,  //kemungkinan otomatis ke parse jd string
-            "street": "Jalan salak timur 8 no 3",
-            "photo": ""
-        },
-        "userLogin": {
-            "username":"arina",
-            "password":"halohai",
-            "email":"arina@gmail.com"
-        }
-    };
-
     var userProf = req.body.userProf;
     var userLog = req.body.userLogin;
 
-    //data user profile
-    var userProfileSql = "INSERT INTO `user_profile` (`id`, `name`, `user_dob`, `sex`, `country`, `province`, `city`, `street`, `photo`, `added_at`, `updated_at`, `deleted_at`)  VALUES ( '', '" + userProf.name + "', '" + userProf.user_dob + "', '" + userProf.sex + "', '" + userProf.country + "', '" + userProf.province + "', '" + userProf.city + "', '" + userProf.street + "', '" + userProf.photo + "','','','')";
+    var bin_pass = atob(userLog.password);
+    var encrypted_pass = cryptr.encrypt(bin_pass);
 
-    var getId="SELECT id FROM `user_profile` WHERE `name`='"+userProf.name+"' AND password = '"+encrypted_pass+"'";
-    //TODO harusnya masukin user login data dulu baru user profile (dan username jd fk di user profile
-    //data user login
-    var dec_pass =atob(userLog.password);
-    var encrypted_pass = cryptr.encrypt(dec_pass);
+    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`, `updated_at`, `deleted_at`) VALUES ('" + userLog.username + "', '" + encrypted_pass + "', '" + userLog.email + "', CURRENT_TIMESTAMP(), '', '')";
 
-    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`user_id`,`added_at`, `updated_at`, `deleted_at`) VALUES ('" + userLog.name + "', '" + encrypted_pass + "', '" + userLog.email + "', , '" + user_id + "','', '', '')";
+    var userProfileSql = "INSERT INTO `user_profile` (`id`, `name`, `user_dob`, `sex`, `country`, `province`, `city`, `street`, `photo`,`username`, `added_at`, `updated_at`, `deleted_at`)  VALUES ( '', '" + userProf.name + "', '" + userProf.user_dob + "', '" + userProf.sex + "', '" + userProf.country + "', '" + userProf.province + "', '" + userProf.city + "', '" + userProf.street + "', '" + userProf.photo + "','" + userLog.username + "', CURRENT_TIMESTAMP(),'','')";
 
-    var query = db.query(sql, function(err, result){
+    db.query(userSql, function(err, result){
         if(err) {
             res.json({
                 "status": "failed",
                 "err": err
             });
+            res.end();
         } else {
-            res.json({
-                "status": "user added",
+            db.query(userProfileSql, function(err, result){
+                if(err) {
+                    res.json({
+                        "status": "failed",
+                        "err": err
+                    });
+                    res.end();
+                } else {
+                    var request = {
+                        "body" : {
+                            "username" : userLog.username,
+                            "password" : userLog.password
+                        }
+                    };
+                    signIn.user(request, res);
+                }
             });
-            res.end(JSON.stringify(result));
         }
     });
+
+
 };
 
 exports.pet =function(req , res){
