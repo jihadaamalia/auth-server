@@ -13,45 +13,46 @@ var signIn = require('./signInController');
  * SIGNUP SERVICES
  */
 exports.user=function(req , res){
-    var userProf = req.body.userProf;
-    var userLog = req.body.userLogin;
+    var userData = req.body;
 
-    var bin_pass = atob(userLog.password);
+    var bin_pass = atob(userData.password);
     var encrypted_pass = cryptr.encrypt(bin_pass);
 
-    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`, `updated_at`, `deleted_at`) VALUES ('" + userLog.username + "', '" + encrypted_pass + "', '" + userLog.email + "', CURRENT_TIMESTAMP(), '', '')";
+    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`, `updated_at`, `deleted_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', CURRENT_TIMESTAMP(), '', '')";
+    var userProfileSql = "INSERT INTO `user_profile` (`id`, `name`, `user_dob`, `sex`, `country`, `province`, `city`, `street`, `photo`,`username`, `added_at`, `updated_at`, `deleted_at`)  VALUES ( '', '" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.country + "', '" + userData.province + "', '" + userData.city + "', '" + userData.street + "', '" + userData.photo + "','" + userData.username + "', CURRENT_TIMESTAMP(),'','')";
 
-    var userProfileSql = "INSERT INTO `user_profile` (`id`, `name`, `user_dob`, `sex`, `country`, `province`, `city`, `street`, `photo`,`username`, `added_at`, `updated_at`, `deleted_at`)  VALUES ( '', '" + userProf.name + "', '" + userProf.user_dob + "', '" + userProf.sex + "', '" + userProf.country + "', '" + userProf.province + "', '" + userProf.city + "', '" + userProf.street + "', '" + userProf.photo + "','" + userLog.username + "', CURRENT_TIMESTAMP(),'','')";
+    const createUser = new Promise(function (resolve, reject) {
+        db.query(userSql, function(err, result){
+            if(err) reject(err);
+            resolve(result)
+        });
+    });
 
-    db.query(userSql, function(err, result){
-        if(err) {
+    const createUserProf = new Promise(function (resolve, reject) {
+        db.query(userProfileSql, function(err, result){
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
+
+    createUser
+        .then(function (resA){ return createUserProf })
+        .then(function (resB){
+            var request = {
+                "body" : {
+                    "username" : userData.username,
+                    "password" : userData.password
+                }
+            };
+            signIn.user(request, res);
+        })
+        .catch(function (err){
             res.json({
                 "status": "failed",
                 "err": err
             });
             res.end();
-        } else {
-            db.query(userProfileSql, function(err, result){
-                if(err) {
-                    res.json({
-                        "status": "failed",
-                        "err": err
-                    });
-                    res.end();
-                } else {
-                    var request = {
-                        "body" : {
-                            "username" : userLog.username,
-                            "password" : userLog.password
-                        }
-                    };
-                    signIn.user(request, res);
-                }
-            });
-        }
-    });
-
-
+        });
 };
 
 
