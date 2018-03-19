@@ -45,10 +45,7 @@ exports.forgot_password = function(req, res) {
         else {
             //create random token for email TODO: create one with expired time
             var token = cryptr.encrypt(email);
-            res.json({
-                "results":
-                    {"status": result}
-            });
+
             //send email
             var data = {
                 to: result[0].email,
