@@ -33,9 +33,9 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 
 exports.forgot_password = function(req, res) {
     var email=req.body.email;
-    var sql_username = "SELECT * FROM `user` WHERE `email`= '"+email+"'";
+    var sql_username = "SELECT * FROM `user` JOIN user_profile ON user_profile.username = user.username WHERE email= '"+email+"';";
     var query = db.query(sql_username, function(err, result){
-        if(!result){
+        if(result == undefined){
             res.json({
                 "results":
                     {"status": "not found"}
@@ -45,7 +45,10 @@ exports.forgot_password = function(req, res) {
         else {
             //create random token for email TODO: create one with expired time
             var token = cryptr.encrypt(email);
-
+            res.json({
+                "results":
+                    {"status": result}
+            });
             //send email
             var data = {
                 to: result[0].email,
@@ -54,7 +57,7 @@ exports.forgot_password = function(req, res) {
                 subject: 'Password help has arrived!',
                 context: {
                     url: 'http://localhost:3000/reset_password?token=' + token,
-                    name: result[0].first_name
+                    name: result[0].name
                 }
             };
 
