@@ -6,10 +6,10 @@
 	var atob = require('atob');
 	var Cryptr = require('cryptr'),
 	path = require('path');
-	cryptr = new Cryptr('myTotalySecretKey');
+	cryptr = new Cryptr(process.env.CRYPTER_KEY);
 	hbs = require('nodemailer-express-handlebars'),
-	email = process.env.MAILER_EMAIL_ID || 'auth_email_address@gmail.com',
-	pass = process.env.MAILER_PASSWORD || 'auth_email_pass',
+	email = process.env.MAILER_EMAIL_ID,
+	pass = process.env.MAILER_PASSWORD,
 	nodemailer = require('nodemailer');
 	var smtpTransport = nodemailer.createTransport({
 	  service: process.env.MAILER_SERVICE_PROVIDER,
@@ -52,32 +52,6 @@
 					"id": result[0].id}
 				});
 				res.end();
-			}
-		});
-	};
-	
-	//---------------------------------------signup services---------------------------------------------------------
-	
-	exports.signup=function(req , res){
-		var fname  = req.body.first_name;
-		var lname= req.body.last_name;
-		var pass= req.body.password;
-		var email=req.body.email;
-		var dec_pass =atob(pass);
-		var encrypted_pass = cryptr.encrypt(dec_pass);
-		var sql = "INSERT INTO `login`(`id`,`first_name`,`last_name`,`email`,`password`) VALUES ('','" + fname + "','" + lname + "','" +email+ "','" +encrypted_pass+ "')";
-		
-		var query = db.query(sql, function(err, result){
-			if(err) {
-				res.json({
-					"status": "failed",
-					"err": err
-				});
-			} else {
-				res.json({
-					"status": "user added",
-				});
-			res.end(JSON.stringify(result));
 			}
 		});
 	};
