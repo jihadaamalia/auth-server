@@ -16,7 +16,14 @@ exports.user = function(req, res){
     var sql="SELECT * FROM `user` WHERE `username`='"+username+"' and password = '"+encrypted_pass+"'";
 
     db.query(sql, function(err, results){
-        if(results.length > 0 && err == null){
+        if (err || results.length < 1) {
+            res.json({
+                "err": err,
+                "results" : results
+            });
+            res.end();
+        }
+        else if(results.length > 0){
             var data = JSON.stringify(results[0]);
             var secret = process.env.JWT_SECRET_KEY;
             var now = Math.floor(Date.now() / 1000),
@@ -62,16 +69,8 @@ exports.user = function(req, res){
                         });
                         res.end();
                     }
-
                 }
             });
-        }
-        else {
-            res.json({
-                "err": err,
-                "results" : results
-            });
-            res.end();
         }
     });
 };

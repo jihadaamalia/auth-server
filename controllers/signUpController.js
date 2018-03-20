@@ -60,15 +60,15 @@ exports.check_username=function(req, res){
     var username =req.body.username;
     var sql_username = "SELECT * FROM `user` WHERE `username`= '"+username+"'";
     var query = db.query(sql_username, function(err, result){
-        if(result == ""){
+        if(result.length == 0){
             res.json({
-                "results": "available"
+                "results": "available" //username available
             });
             res.end();
         }
         else{
             res.json({
-                "results": "not available"
+                "results": "not available" //username is already used
             });
             res.end();
         }
