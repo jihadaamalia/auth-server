@@ -16,7 +16,7 @@ exports.user = function(req, res){
     var sql="SELECT * FROM `user` WHERE `username`='"+username+"' and password = '"+encrypted_pass+"'";
 
     db.query(sql, function(err, results){
-        if(results){
+        if(results.length > 0 && err == null){
             var data = JSON.stringify(results[0]);
             var secret = process.env.JWT_SECRET_KEY;
             var now = Math.floor(Date.now() / 1000),
@@ -66,9 +66,10 @@ exports.user = function(req, res){
                 }
             });
         }
-        else if(!results){
+        else {
             res.json({
-                "results": err
+                "err": err,
+                "results" : results
             });
             res.end();
         }
