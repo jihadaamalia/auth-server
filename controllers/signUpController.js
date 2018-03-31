@@ -18,8 +18,8 @@ exports.user=function(req , res){
     var bin_pass = atob(userData.password);
     var encrypted_pass = cryptr.encrypt(bin_pass);
 
-    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`, `updated_at`, `deleted_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', CURRENT_TIMESTAMP(), '', '')";
-    var userProfileSql = "INSERT INTO `user_profile` (`id`, `name`, `user_dob`, `sex`, `username`, `photo`, `street`, `city`, `added_at`, `updated_at`, `deleted_at`)  VALUES ( '', '" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.username + "', '" + userData.photo + "', '" + userData.street + "', '" + userData.city + "', CURRENT_TIMESTAMP(),'','')";
+    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', CURRENT_TIMESTAMP())";
+    var userProfileSql = "INSERT INTO `user_profile` (`name`, `user_dob`, `sex`, `username`, `photo`, `street`, `city`, `added_at`)  VALUES ('" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.username + "', '" + userData.photo + "', '" + userData.street + "', '" + userData.city + "', CURRENT_TIMESTAMP())";
 
     const createUser = new Promise(function (resolve, reject) {
         db.query(userSql, function(err, result){
