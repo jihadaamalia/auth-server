@@ -18,8 +18,8 @@ exports.user=function(req , res){
     var bin_pass = atob(userData.password);
     var encrypted_pass = cryptr.encrypt(bin_pass);
 
-    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`, `updated_at`, `deleted_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', CURRENT_TIMESTAMP(), '', '')";
-    var userProfileSql = "INSERT INTO `user_profile` (`id`, `name`, `user_dob`, `sex`, `country`, `province`, `city`, `street`, `photo`,`username`, `added_at`, `updated_at`, `deleted_at`)  VALUES ( '', '" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.country + "', '" + userData.province + "', '" + userData.city + "', '" + userData.street + "', '" + userData.photo + "','" + userData.username + "', CURRENT_TIMESTAMP(),'','')";
+    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', CURRENT_TIMESTAMP())";
+    var userProfileSql = "INSERT INTO `user_profile` (`name`, `user_dob`, `sex`, `username`, `photo`, `street`, `city`, `added_at`)  VALUES ('" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.username + "', '" + userData.photo + "', '" + userData.street + "', '" + userData.city + "', CURRENT_TIMESTAMP())";
 
     const createUser = new Promise(function (resolve, reject) {
         db.query(userSql, function(err, result){
@@ -60,15 +60,15 @@ exports.check_username=function(req, res){
     var username =req.body.username;
     var sql_username = "SELECT * FROM `user` WHERE `username`= '"+username+"'";
     var query = db.query(sql_username, function(err, result){
-        if(result == ""){
+        if(result.length == 0){
             res.json({
-                "results": "available"
+                "results": "available" //username available
             });
             res.end();
         }
         else{
             res.json({
-                "results": "not available"
+                "results": "not available" //username is already used
             });
             res.end();
         }

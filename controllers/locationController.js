@@ -1,14 +1,13 @@
 exports.provinces=function(req, res){
     var provinces_sql = "SELECT * FROM `provinces`";
     var query = db.query(provinces_sql, function(err, result){
-        if(!result){
+        if (err) {
             res.json({
-                "results":
-                    {"status": "not found"}
+                "err": err
             });
             res.end();
         }
-        else{
+        else {
             res.json({
                 "results": result
             });

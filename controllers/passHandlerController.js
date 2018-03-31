@@ -35,10 +35,15 @@ exports.forgot_password = function(req, res) {
     var email=req.body.email;
     var sql_username = "SELECT * FROM `user` JOIN user_profile ON user_profile.username = user.username WHERE email= '"+email+"';";
     var query = db.query(sql_username, function(err, result){
-        if(result == undefined){
+        if (err) {
             res.json({
-                "results":
-                    {"status": "not found"}
+                "error": err
+            });
+            res.end();
+        }
+        else if(result.length < 1){
+            res.json({
+                "results": "not found"
             });
             res.end();
         }
@@ -91,10 +96,18 @@ exports.reset_password = function(req, res, next) {
             });
             res.end();
         }
-        else{
+        else {
             var sql_get = "SELECT * FROM user_profile JOIN user ON user_profile.username = user.username WHERE email= '"+resetEmail+"'";
             var query = db.query(sql_get, function(err, result){
-                if(!err) {
+                if (err) {
+                    if(err){
+                        res.json({
+                            "status": err
+                        });
+                        res.end();
+                    }
+                }
+                else if(result.length > 0 && !err) {
                     var data = {
                         to: resetEmail,
                         from: email,
