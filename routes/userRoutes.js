@@ -23,10 +23,10 @@ module.exports = function(app) {
 
 	//forgot password
 	app.post('/forgot_password', passhandler.forgot_password);
-	app.route('/reset_password')
-	    .get(passhandler.render_reset_password_template) //get website page to input new pass
-	    .post(passhandler.reset_password); //update password
-	app.get('/reset_password/success', passhandler.render_reset_password_success_template);
+	// app.route('/reset_password')
+	//     .get(passhandler.render_reset_password_template) //get website page to input new pass
+	//     .post(passhandler.reset_password); //update password
+	// app.get('/reset_password/success', passhandler.render_reset_password_success_template);
 
 };
   

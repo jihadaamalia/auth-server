@@ -110,16 +110,16 @@ exports.forgot_password = function(req, res) {
 
 //-----------------------------------------reset password-------------------------------------------
 
-exports.render_reset_password_template = function(req, res) {
-    return res.sendFile(path.resolve('./public/reset_password_template.html'));
-};
-
-exports.reset_password = function(req, res, next) {
-
-    var resetEmail = cryptr.decrypt(req.body.token);
-
-};
-
-exports.render_reset_password_success_template = function(req, res) {
-    return res.sendFile(path.resolve('./public/reset_password_success_template.html'));
-};
+// exports.render_reset_password_template = function(req, res) {
+//     return res.sendFile(path.resolve('./public/reset_password_template.html'));
+// };
+//
+// exports.reset_password = function(req, res, next) {
+//
+//     var resetEmail = cryptr.decrypt(req.body.token);
+//
+// };
+//
+// exports.render_reset_password_success_template = function(req, res) {
+//     return res.sendFile(path.resolve('./public/reset_password_success_template.html'));
+// };
