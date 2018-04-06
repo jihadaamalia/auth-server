@@ -27,6 +27,7 @@ exports.user=function(req , res){
                 error_msg: err,
                 response: ''
             });
+            res.end();
         } else if (result[0]){
             res.json({
                 status: 200,
@@ -34,6 +35,7 @@ exports.user=function(req , res){
                 error_msg: 'Email already registered!',
                 response: ''
             });
+            res.end();
         } else {
             var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`first_login`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', 1, CURRENT_TIMESTAMP())";
             //var userProfileSql = "INSERT INTO `user_profile` (`name`, `user_dob`, `sex`, `username`, `photo`, `street`, `city`, `added_at`)  VALUES ('" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.username + "', '" + userData.photo + "', '" + userData.street + "', '" + userData.city + "', CURRENT_TIMESTAMP())";
@@ -46,6 +48,7 @@ exports.user=function(req , res){
                         error_msg: err,
                         response: ''
                     });
+                    res.end();
                 } else {
                     res.json({
                         status: 200,
@@ -53,6 +56,7 @@ exports.user=function(req , res){
                         error_msg: '',
                         response: 'User added!'
                     });
+                    res.end();
                 }
             });
         }

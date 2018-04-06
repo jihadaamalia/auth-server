@@ -77,6 +77,7 @@ exports.user = function(req, res){
                     error_msg: err,
                     response: 'Error occurred while generating token',
                 });
+                res.end();
             } else {
                 if(token){
                     if (first_login) { //custom response depends on first login state
