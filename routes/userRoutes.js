@@ -3,7 +3,6 @@
 module.exports = function(app) {
     var signup = require('../controllers/signUpController');
     var signin = require('../controllers/signInController');
-    //var location = require('../controllers/locationController');
     var passhandler = require('../controllers/passHandlerController');
 
   	app.get("/",function(req,res){
@@ -22,4 +21,3 @@ module.exports = function(app) {
 	app.post('/forgot_password', passhandler.forgot_password);
 
 };
-  
