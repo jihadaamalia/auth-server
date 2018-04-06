@@ -62,22 +62,22 @@ exports.check_username=function(req, res){
     var query = db.query(sql_username, function(err, result){
         if(result.length == 0){
             res.json({
-                "status": 200,
-                "error": true,
-                "error_msg": '',
-                "response": {
-                    "availability" : true //username available
+                status: 200,
+                error: true,
+                error_msg: '',
+                response: {
+                    availability: true //username available
                 }
             });
             res.end();
         }
         else{
             res.json({
-                "status": 200,
-                "error": true,
-                "error_msg": '',
-                "response": {
-                    "availability" : false //username already used
+                status: 200,
+                error: true,
+                error_msg: '',
+                response: {
+                    availability: false //username already used
                 }
             });
             res.end();

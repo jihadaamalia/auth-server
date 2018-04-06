@@ -20,10 +20,10 @@ exports.user = function(req, res){
     db.query(sql, function(err, results){ //get user tables data
         if (err || results.length < 1) {
             res.json({
-                "status": 404,
-                "error": true,
-                "error_msg": 'Wrong user or password',
-                "response": results
+                status: 404,
+                error: true,
+                error_msg: 'Wrong user or password',
+                response: results
             });
             res.end();
         }
@@ -72,38 +72,38 @@ exports.user = function(req, res){
         jwt.sign(payload, secret, header, function(err, token) {
             if(err){
                 res.json({
-                    "status": 200,
-                    "error": true,
-                    "error_msg": err,
-                    "response": 'Error occurred while generating token',
+                    status: 200,
+                    error: true,
+                    error_msg: err,
+                    response: 'Error occurred while generating token',
                 });
             } else {
                 if(token){
                     if (first_login) { //custom response depends on first login state
                         self.success_res = {
-                            "token": token,
-                            "first_login": first_login
+                            token: token,
+                            first_login: first_login
                         }
                     } else {
                         self.success_res = {
-                            "token": token
+                            token: token
                         }
                     }
 
                     res.header();
                     res.json({
-                        "status": 200,
-                        "error": false,
-                        "error_msg": '',
-                        "response": self.success_res
+                        status: 200,
+                        error: false,
+                        error_msg: '',
+                        response: self.success_res
                     });
                     res.end();
                 } else{
                     res.json({
-                        "status": 200,
-                        "error": true,
-                        "error_msg": 'Could not generate token',
-                        "response": ''
+                        status: 200,
+                        error: true,
+                        error_msg: 'Could not generate token',
+                        response: ''
                     });
                     res.end();
                 }
