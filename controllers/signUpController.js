@@ -18,41 +18,45 @@ exports.user=function(req , res){
     var bin_pass = atob(userData.password);
     var encrypted_pass = cryptr.encrypt(bin_pass);
 
-    var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', CURRENT_TIMESTAMP())";
-    var userProfileSql = "INSERT INTO `user_profile` (`name`, `user_dob`, `sex`, `username`, `photo`, `street`, `city`, `added_at`)  VALUES ('" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.username + "', '" + userData.photo + "', '" + userData.street + "', '" + userData.city + "', CURRENT_TIMESTAMP())";
-
-    const createUser = new Promise(function (resolve, reject) {
-        db.query(userSql, function(err, result){
-            if(err) reject(err);
-            resolve(result)
-        });
-    });
-
-    const createUserProf = new Promise(function (resolve, reject) {
-        db.query(userProfileSql, function(err, result){
-            if(err) reject(err);
-            resolve(result);
-        });
-    });
-
-    createUser
-        .then(function (resA){ return createUserProf })
-        .then(function (resB){
-            var request = {
-                "body" : {
-                    "username" : userData.username,
-                    "password" : userData.password
-                }
-            };
-            signIn.user(request, res);
-        })
-        .catch(function (err){
+    var checkEmail = "SELECT * FROM `user` WHERE `email`= '"+userData.email+"'";
+    db.query(checkEmail, function(err, result){
+        if(err) {
             res.json({
-                "status": "failed",
-                "err": err
+                status: 200,
+                error: true,
+                error_msg: err,
+                response: ''
             });
-            res.end();
-        });
+        } else if (result[0]){
+            res.json({
+                status: 200,
+                error: true,
+                error_msg: 'Email already registered!',
+                response: ''
+            });
+        } else {
+            var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`first_login`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', 1, CURRENT_TIMESTAMP())";
+            //var userProfileSql = "INSERT INTO `user_profile` (`name`, `user_dob`, `sex`, `username`, `photo`, `street`, `city`, `added_at`)  VALUES ('" + userData.name + "', '" + userData.user_dob + "', '" + userData.sex + "', '" + userData.username + "', '" + userData.photo + "', '" + userData.street + "', '" + userData.city + "', CURRENT_TIMESTAMP())";
+
+            db.query(userSql, function(err, result){
+                if(err) {
+                    res.json({
+                        status: 200,
+                        error: true,
+                        error_msg: err,
+                        response: ''
+                    });
+                } else {
+                    res.json({
+                        status: 200,
+                        error: false,
+                        error_msg: '',
+                        response: 'User added!'
+                    });
+                }
+            });
+        }
+    });
 };
 
 
@@ -63,7 +67,7 @@ exports.check_username=function(req, res){
         if(result.length == 0){
             res.json({
                 status: 200,
-                error: true,
+                error: false,
                 error_msg: '',
                 response: {
                     availability: true //username available
@@ -74,7 +78,7 @@ exports.check_username=function(req, res){
         else{
             res.json({
                 status: 200,
-                error: true,
+                error: false,
                 error_msg: '',
                 response: {
                     availability: false //username already used
