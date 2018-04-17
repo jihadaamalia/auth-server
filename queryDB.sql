@@ -17,8 +17,7 @@ CREATE TABLE `user_profile` (
   `user_dob` date NOT NULL,
   `sex` char(2) DEFAULT NULL,
   `username` varchar(20) NOT NULL,
-  `photo` longblob,
-  `street` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
   `city` char(4) COLLATE utf8_unicode_ci DEFAULT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
@@ -39,7 +38,8 @@ CREATE TABLE `pet` (
   `furcolor` varchar(50) DEFAULT NULL,
   `weight` varchar(5) NOT NULL,
   `breed` int(11) NOT NULL,
-  `pet_photo` longblob,
+  `pet_photo` varchar(255),
+  `breed_cert` varchar(50),
   `pet_desc` text,
   `user_id` int(5) NOT NULL,
   `breed_pref` int(11) DEFAULT NULL,
@@ -63,7 +63,6 @@ CREATE TABLE `history_with` (
   `match_stat` char(1) NOT NULL,
   `match_date` date NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   CONSTRAINT FK_pet_mHistory_with FOREIGN KEY (`pet_m`) REFERENCES pet(`id`),
   CONSTRAINT FK_pet_fHistory_with FOREIGN KEY (`pet_f`) REFERENCES pet(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -74,7 +73,6 @@ CREATE TABLE `liked` (
   `pet_f` int(5) NOT NULL ,
   `like_stat` char(1) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   CONSTRAINT FK_pet_mLiked FOREIGN KEY (`pet_m`) REFERENCES pet(`id`),
   CONSTRAINT FK_pet_fLiked FOREIGN KEY (`pet_f`) REFERENCES pet(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -92,12 +90,13 @@ CREATE TABLE `message_with` (
 
 -- vacciness
 CREATE TABLE `vaccines` (
-  `id` int(5) NOT NULL ,
-  `name` int(5) NOT NULL ,
+  `id` int(5) NOT NULL  AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL ,
   `variant` int(11) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
   CONSTRAINT `FK_variantvaccines` FOREIGN KEY (`variant`) REFERENCES `variants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -107,7 +106,6 @@ CREATE TABLE `have_vaccines` (
   `id_pet` int(5) NOT NULL ,
   `id_vaccine` int(5) NOT NULL ,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   CONSTRAINT `FK_id_petHave_vaccines` FOREIGN KEY (`id_pet`) REFERENCES `pet` (`id`),
-  CONSTRAINT `FK_id_vaccineHave_vaccines` FOREIGN KEY (`id_pet`) REFERENCES `pet` (`id`)
+  CONSTRAINT `FK_id_vaccineHave_vaccines` FOREIGN KEY (`id_vaccine`) REFERENCES `vaccines` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
