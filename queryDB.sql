@@ -69,12 +69,12 @@ CREATE TABLE `history_with` (
 
 -- like
 CREATE TABLE `liked` (
-  `pet_m` int(5) NOT NULL ,
-  `pet_f` int(5) NOT NULL ,
+  `from` int(5) NOT NULL ,
+  `to` int(5) NOT NULL ,
   `like_stat` char(1) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT FK_pet_mLiked FOREIGN KEY (`pet_m`) REFERENCES pet(`id`),
-  CONSTRAINT FK_pet_fLiked FOREIGN KEY (`pet_f`) REFERENCES pet(`id`)
+  CONSTRAINT FK_pet_mLiked FOREIGN KEY (`from`) REFERENCES pet(`id`),
+  CONSTRAINT FK_pet_fLiked FOREIGN KEY (`to`) REFERENCES pet(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- message with
