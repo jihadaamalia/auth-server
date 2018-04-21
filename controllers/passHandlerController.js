@@ -33,41 +33,72 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 
 exports.forgot_password = function(req, res) {
     var email=req.body.email;
-    var sql_username = "SELECT * FROM `user` JOIN user_profile ON user_profile.username = user.username WHERE email= '"+email+"';";
+    console.log(email);
+    var sql_username = "SELECT * FROM `user` WHERE `email` = '"+email+"';";
     var query = db.query(sql_username, function(err, result){
         if (err) {
             res.json({
-                "error": err
+                status: 200,
+                error: true,
+                error_msg: 'MySQL went wrong',
+                response: err
             });
             res.end();
-        }
-        else if(result.length < 1){
+        } else if(result.length < 1){
             res.json({
-                "results": "not found"
+                status: 200,
+                error: true,
+                error_msg: 'Email not registered',
+                response: ''
             });
             res.end();
-        }
-        else {
-            //create random token for email TODO: create one with expired time
-            var token = cryptr.encrypt(email);
-
-            //send email
-            var data = {
-                to: result[0].email,
-                from: email,
-                template: 'forgot-password-email',
-                subject: 'Password help has arrived!',
-                context: {
-                    url: 'http://localhost:3000/reset_password?token=' + token,
-                    name: result[0].name
-                }
-            };
-
-            smtpTransport.sendMail(data, function(err) {
-                if (!err) {
-                    return res.json({ message: 'Kindly check your email for further instructions' });
+        } else {
+            var newPassword = Math.random().toString(36).slice(-8);
+            var dec_pass = atob(newPassword);
+            var encrypted_pass = cryptr.encrypt(dec_pass);
+            var password_reset = "UPDATE `user` SET `password` = '"+encrypted_pass+"' WHERE `email`= '"+email+"'";
+            var query = db.query(password_reset, function(err, updateRes){
+                if(err){
+                    res.json({
+                        status: 200,
+                        error: true,
+                        error_msg: 'Update password failed',
+                        response: err
+                    });
+                    res.end();
                 } else {
-                    return res.json({ message: err});
+                    var data = {
+                        to: result[0].email,
+                        from: email,
+                        template: 'forgot-password-email',
+                        subject: 'Password help has arrived!',
+                        context: {
+                            newPass: newPassword,
+                            name: result[0].username
+                        }
+                    };
+
+                    //send email
+                    smtpTransport.sendMail(data, function(err) {
+                        if (!err) {
+                            res.json({
+                                status: 200,
+                                error: false,
+                                error_msg: '',
+                                response: 'Kindly check your email for further information'
+                            });
+                            res.end();
+                        } else {
+                            res.json({
+                                status: 200,
+                                error: true,
+                                error_msg: 'Failed to send reset email, your new password is '+ newPassword,
+                                response: err
+                            });
+                            res.end();
+                        }
+                    });
+
                 }
             });
 
@@ -79,59 +110,16 @@ exports.forgot_password = function(req, res) {
 
 //-----------------------------------------reset password-------------------------------------------
 
-exports.render_reset_password_template = function(req, res) {
-    return res.sendFile(path.resolve('./public/reset_password_template.html'));
-};
-
-exports.reset_password = function(req, res, next) {
-
-    var resetEmail = cryptr.decrypt(req.body.token);
-    var dec_pass = atob(req.body.newPassword);
-    var encrypted_pass = cryptr.encrypt(dec_pass);
-    var password_reset = "UPDATE `user` SET `password` = '"+encrypted_pass+"' WHERE `email`= '"+resetEmail+"'";
-    var query = db.query(password_reset, function(err, result){
-        if(err){
-            res.json({
-                "status": "update password failed"
-            });
-            res.end();
-        }
-        else {
-            var sql_get = "SELECT * FROM user_profile JOIN user ON user_profile.username = user.username WHERE email= '"+resetEmail+"'";
-            var query = db.query(sql_get, function(err, result){
-                if (err) {
-                    if(err){
-                        res.json({
-                            "status": err
-                        });
-                        res.end();
-                    }
-                }
-                else if(result.length > 0 && !err) {
-                    var data = {
-                        to: resetEmail,
-                        from: email,
-                        template: 'reset-password-email',
-                        subject: 'Password Reset Confirmation',
-                        context: {
-                            name: result[0].name
-                        }
-                    };
-
-                    smtpTransport.sendMail(data, function(err) {
-                        if (!err) {
-                            res.json({ message: 'Password reset' });
-                            res.end();
-                        } else {
-                            return res.json(err);
-                        }
-                    });
-                }
-            });
-        }
-    });
-};
-
-exports.render_reset_password_success_template = function(req, res) {
-    return res.sendFile(path.resolve('./public/reset_password_success_template.html'));
-};
+// exports.render_reset_password_template = function(req, res) {
+//     return res.sendFile(path.resolve('./public/reset_password_template.html'));
+// };
+//
+// exports.reset_password = function(req, res, next) {
+//
+//     var resetEmail = cryptr.decrypt(req.body.token);
+//
+// };
+//
+// exports.render_reset_password_success_template = function(req, res) {
+//     return res.sendFile(path.resolve('./public/reset_password_success_template.html'));
+// };
