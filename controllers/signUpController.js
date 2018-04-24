@@ -22,9 +22,12 @@ exports.user=function(req , res){
     db.query(checkEmail, function(err, result){
         if(err) {
             res.json({
-                status: 200,
+                status: 400,
                 error: true,
-                error_msg: err,
+                error_msg: {
+                    title: 'MySQL went wrong',
+                    detail: err
+                },
                 response: ''
             });
             res.end();
@@ -32,7 +35,9 @@ exports.user=function(req , res){
             res.json({
                 status: 200,
                 error: true,
-                error_msg: 'Email already registered!',
+                error_msg: {
+                    title: 'Email already registered!'
+                },
                 response: ''
             });
             res.end();
@@ -43,9 +48,12 @@ exports.user=function(req , res){
             db.query(userSql, function(err, result){
                 if(err) {
                     res.json({
-                        status: 200,
+                        status: 400,
                         error: true,
-                        error_msg: err,
+                        error_msg: {
+                            title: 'MySQL went wrong',
+                            detail: err
+                        },
                         response: ''
                     });
                     res.end();

@@ -22,8 +22,11 @@ exports.user = function(req, res){
             res.json({
                 status: 404,
                 error: true,
-                error_msg: 'Wrong user or password',
-                response: results
+                error_msg: {
+                    title: 'Wrong user or password',
+                    detail: results
+                },
+                response: ''
             });
             res.end();
         }
@@ -72,10 +75,13 @@ exports.user = function(req, res){
         jwt.sign(payload, secret, header, function(err, token) {
             if(err){
                 res.json({
-                    status: 200,
+                    status: 500,
                     error: true,
-                    error_msg: err,
-                    response: 'Error occurred while generating token',
+                    error_msg: {
+                        title: 'Error occurred while generating token',
+                        detail: err
+                    },
+                    response: '',
                 });
                 res.end();
             } else {
@@ -101,9 +107,11 @@ exports.user = function(req, res){
                     res.end();
                 } else{
                     res.json({
-                        status: 200,
+                        status: 500,
                         error: true,
-                        error_msg: 'Could not generate token',
+                        error_msg: {
+                            title: 'Could not generate token'
+                        },
                         response: ''
                     });
                     res.end();

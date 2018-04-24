@@ -38,17 +38,22 @@ exports.forgot_password = function(req, res) {
     var query = db.query(sql_username, function(err, result){
         if (err) {
             res.json({
-                status: 200,
+                status: 400,
                 error: true,
-                error_msg: 'MySQL went wrong',
-                response: err
+                error_msg: {
+                    title: 'MySQL went wrong',
+                    detail: err
+                },
+                response: ''
             });
             res.end();
         } else if(result.length < 1){
             res.json({
-                status: 200,
+                status: 404,
                 error: true,
-                error_msg: 'Email not registered',
+                error_msg: {
+                    title: 'Email not registered'
+                },
                 response: ''
             });
             res.end();
@@ -60,10 +65,13 @@ exports.forgot_password = function(req, res) {
             var query = db.query(password_reset, function(err, updateRes){
                 if(err){
                     res.json({
-                        status: 200,
+                        status: 500,
                         error: true,
-                        error_msg: 'Update password failed',
-                        response: err
+                        error_msg: {
+                            title: 'Update password failed',
+                            detail: err
+                        },
+                        response: ''
                     });
                     res.end();
                 } else {
@@ -90,10 +98,13 @@ exports.forgot_password = function(req, res) {
                             res.end();
                         } else {
                             res.json({
-                                status: 200,
+                                status: 500,
                                 error: true,
-                                error_msg: 'Failed to send reset email, your new password is '+ newPassword,
-                                response: err
+                                error_msg: {
+                                    title: 'Failed to send reset email, your new password is '+ newPassword,
+                                    detail: err
+                                },
+                                response: ''
                             });
                             res.end();
                         }
