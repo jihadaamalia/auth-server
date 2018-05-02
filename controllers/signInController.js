@@ -24,7 +24,7 @@ exports.user = function(req, res){
                 error: true,
                 error_msg: {
                     title: 'Wrong user or password',
-                    detail: results
+                    detail: err
                 },
                 response: ''
             });
