@@ -33,7 +33,7 @@ exports.user=function(req , res){
             res.end();
         } else if (result[0]){
             res.json({
-                status: 200,
+                status: 400,
                 error: true,
                 error_msg: {
                     title: 'Email already registered!',
