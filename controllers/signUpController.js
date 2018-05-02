@@ -36,7 +36,8 @@ exports.user=function(req , res){
                 status: 200,
                 error: true,
                 error_msg: {
-                    title: 'Email already registered!'
+                    title: 'Email already registered!',
+                    detail: ''
                 },
                 response: ''
             });
@@ -61,7 +62,10 @@ exports.user=function(req , res){
                     res.json({
                         status: 200,
                         error: false,
-                        error_msg: '',
+                        error_msg: {
+                            title: '',
+                            detail: ''
+                        },
                         response: 'User added!'
                     });
                     res.end();
@@ -80,7 +84,10 @@ exports.check_username=function(req, res){
             res.json({
                 status: 200,
                 error: false,
-                error_msg: '',
+                error_msg: {
+                    title: '',
+                    detail: ''
+                },
                 response: {
                     availability: true //username available
                 }
@@ -91,7 +98,10 @@ exports.check_username=function(req, res){
             res.json({
                 status: 200,
                 error: false,
-                error_msg: '',
+                error_msg: {
+                    title: '',
+                    detail: ''
+                },
                 response: {
                     availability: false //username already used
                 }

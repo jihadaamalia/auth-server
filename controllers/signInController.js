@@ -101,7 +101,10 @@ exports.user = function(req, res){
                     res.json({
                         status: 200,
                         error: false,
-                        error_msg: '',
+                        error_msg: {
+                            title: '',
+                            detail: ''
+                        },
                         response: self.success_res
                     });
                     res.end();
@@ -110,7 +113,8 @@ exports.user = function(req, res){
                         status: 500,
                         error: true,
                         error_msg: {
-                            title: 'Could not generate token'
+                            title: 'Could not generate token',
+                            detail: ''
                         },
                         response: ''
                     });

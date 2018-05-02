@@ -52,7 +52,8 @@ exports.forgot_password = function(req, res) {
                 status: 404,
                 error: true,
                 error_msg: {
-                    title: 'Email not registered'
+                    title: 'Email not registered',
+                    detail: ''
                 },
                 response: ''
             });
@@ -92,7 +93,10 @@ exports.forgot_password = function(req, res) {
                             res.json({
                                 status: 200,
                                 error: false,
-                                error_msg: '',
+                                error_msg: {
+                                    title: '',
+                                    detail: ''
+                                },
                                 response: 'Kindly check your email for further information'
                             });
                             res.end();
