@@ -23,7 +23,7 @@ CREATE TABLE `user_profile` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
    PRIMARY KEY (`id`),
-   CONSTRAINT FK_usernameUser_profile FOREIGN KEY (`username`) REFERENCES user(`username`),
+   CONSTRAINT FK_usernameUser_profile FOREIGN KEY (`username`) REFERENCES user(`username`) ON UPDATE CASCADE,
    CONSTRAINT FK_cityUser_profile FOREIGN KEY (`city`) REFERENCES regencies(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
