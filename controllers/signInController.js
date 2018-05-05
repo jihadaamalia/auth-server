@@ -31,25 +31,21 @@ exports.user = function(req, res){
             res.end();
         }
         else if(results.length > 0){
-            self.token_data = {
-                username : results[0].username
-            };
+            var getUserProf="SELECT user.id AS username_id, user_profile.id AS user_id, pet.id AS pet_id FROM user JOIN user_profile ON user.id = user_profile.username_id JOIN pet ON user_profile.id = pet.user_id WHERE user.username='"+username+"'";
+            db.query(getUserProf, function(err, tokenResults){
 
-            if (results[0].first_login == 1) {
-                var first_login = true;
-                self.createToken(first_login);
-            } else {
-                var getUserProf="SELECT id FROM `user_profile` WHERE `username`='"+username+"'";
-                db.query(getUserProf, function(err, profResults){
-                    self.token_data.user_id = profResults[0].id;
+                self.token_data = {
+                    username_id : tokenResults[0].username_id,
+                    user_id : tokenResults[0].user_id,
+                    pet_id : tokenResults[0].pet_id
+                };
 
-                    var getPet="SELECT id FROM `pet` WHERE `user_id`='"+profResults[0].id+"'";
-                    db.query(getPet, function(err, petResults){
-                        self.token_data.pet_id = petResults[0].id;
-                        self.createToken();
-                    })
-                });
-            }
+                if (results[0].first_login == 1) {
+                    self.createToken(true);
+                } else {
+                    self.createToken(false);
+                }
+            });
         }
     });
 
@@ -86,16 +82,10 @@ exports.user = function(req, res){
                 res.end();
             } else {
                 if(token){
-                    if (first_login) { //custom response depends on first login state
-                        self.success_res = {
-                            token: token,
-                            first_login: first_login
-                        }
-                    } else {
-                        self.success_res = {
-                            token: token
-                        }
-                    }
+                    self.success_res = {
+                        token: token,
+                        first_login: first_login
+                    };
 
                     res.header();
                     res.json({

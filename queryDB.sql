@@ -1,5 +1,6 @@
 -- user
 CREATE TABLE `user` (
+  `id` int(5) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -7,23 +8,23 @@ CREATE TABLE `user` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `first_login` INT NOT NULL,
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- user_profile
-CREATE TABLE `user_profile` (
+  -- user_profile
+  CREATE TABLE `user_profile` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `user_dob` date NOT NULL,
   `sex` char(2) DEFAULT NULL,
-  `username` varchar(20) NOT NULL,
+  `username_id` int(5) NOT NULL,
   `photo` varchar(255) DEFAULT NULL,
   `city` char(4) COLLATE utf8_unicode_ci DEFAULT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-   PRIMARY KEY (`id`),
-   CONSTRAINT FK_usernameUser_profile FOREIGN KEY (`username`) REFERENCES user(`username`) ON UPDATE CASCADE,
+  PRIMARY KEY (`id`),
+   CONSTRAINT FK_user_idUser_profile FOREIGN KEY (`username_id`) REFERENCES user(`id`),
    CONSTRAINT FK_cityUser_profile FOREIGN KEY (`city`) REFERENCES regencies(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -37,7 +38,7 @@ CREATE TABLE `pet` (
   `pet_sex` char(2) NOT NULL,
   `furcolor` varchar(50) DEFAULT NULL,
   `weight` varchar(5) NOT NULL,
-  `breed` int(11) NOT NULL,
+  `breed` int(11) DEFAULT NULL,
   `pet_photo` varchar(255),
   `breed_cert` varchar(50),
   `pet_desc` text,
