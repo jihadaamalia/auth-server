@@ -14,8 +14,8 @@ CREATE TABLE `user` (
   -- user_profile
   CREATE TABLE `user_profile` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `user_dob` date NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `user_dob` date DEFAULT NULL,
   `sex` char(2) DEFAULT NULL,
   `username_id` int(5) NOT NULL,
   `photo` varchar(255) DEFAULT NULL,
@@ -33,15 +33,15 @@ CREATE TABLE `user` (
 -- pet
 CREATE TABLE `pet` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
-  `pet_name` varchar(50) NOT NULL,
-  `pet_dob` date NOT NULL,
-  `pet_sex` char(2) NOT NULL,
+  `pet_name` varchar(50) DEFAULT NULL,
+  `pet_dob` date DEFAULT NULL,
+  `pet_sex` char(2) DEFAULT NULL,
   `furcolor` varchar(50) DEFAULT NULL,
-  `weight` varchar(5) NOT NULL,
+  `weight` varchar(5) DEFAULT NULL,
   `breed` int(11) DEFAULT NULL,
-  `pet_photo` varchar(255),
-  `breed_cert` varchar(50),
-  `pet_desc` text,
+  `pet_photo` varchar(255) DEFAULT NULL,
+  `breed_cert` varchar(50) DEFAULT NULL,
+  `pet_desc` text DEFAULT NULL,
   `user_id` int(5) NOT NULL,
   `breed_pref` int(11) DEFAULT NULL,
   `age_min` varchar(5) DEFAULT NULL,
