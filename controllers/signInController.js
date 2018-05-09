@@ -59,7 +59,7 @@ exports.user = function(req, res){
         var jwtId = Math.random().toString(36).substring(7);
 
         var payload = {
-            jwtid : jwtId,
+            jti : jwtId,
             data: data
         };
 
