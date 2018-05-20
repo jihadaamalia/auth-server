@@ -12,7 +12,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
   -- user_profile
-  CREATE TABLE `user_profile` (
+CREATE TABLE `user_profile` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   `user_dob` date DEFAULT NULL,
@@ -63,6 +63,7 @@ CREATE TABLE `history_with` (
   `pet_f` int(5) NOT NULL ,
   `match_stat` char(1) NOT NULL,
   `match_date` date NOT NULL,
+  `score` varchar(255) DEFAULT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT FK_pet_mHistory_with FOREIGN KEY (`pet_m`) REFERENCES pet(`id`),
   CONSTRAINT FK_pet_fHistory_with FOREIGN KEY (`pet_f`) REFERENCES pet(`id`)
@@ -73,38 +74,36 @@ CREATE TABLE `liked` (
   `from` int(5) NOT NULL ,
   `to` int(5) NOT NULL ,
   `like_stat` char(1) NOT NULL,
+  `score` varchar(255) DEFAULT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT FK_pet_mLiked FOREIGN KEY (`from`) REFERENCES pet(`id`),
   CONSTRAINT FK_pet_fLiked FOREIGN KEY (`to`) REFERENCES pet(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- message with
-CREATE TABLE `room_chat` (
+CREATE TABLE `chat_room` (
   `id` int(5) NOT NULL AUTO_INCREMENT,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `member_chat` (
+CREATE TABLE `chat_member` (
   `member_id` int(5) NOT NULL ,
   `room_id` int(5) NOT NULL ,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT memberidMember_chat FOREIGN KEY (`member_id`) REFERENCES pet(`id`),
-  CONSTRAINT roomidRoom_chat FOREIGN KEY (`room_id`) REFERENCES room_chat(`id`)
+  CONSTRAINT memberidChat_member FOREIGN KEY (`member_id`) REFERENCES pet(`id`),
+  CONSTRAINT roomidChat_member FOREIGN KEY (`room_id`) REFERENCES chat_room(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-CREATE TABLE `message_with` (
+CREATE TABLE `chat_msg` (
   `from` int(5) NOT NULL ,
   `image` varchar(255) DEFAULT NULL,
   `text` LONGTEXT DEFAULT NULL,
-  'room_id' int(5) NOT NULL,
+  `room_id` int(5) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fromMessage_with FOREIGN KEY (`from`) REFERENCES pet(`id`),
-  CONSTRAINT roomidMessage_with FOREIGN KEY (`room_id`) REFERENCES room_chat(`id`)
+  CONSTRAINT fromChat_msg FOREIGN KEY (`from`) REFERENCES pet(`id`),
+  CONSTRAINT roomidChat_msg FOREIGN KEY (`room_id`) REFERENCES chat_room(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-
 
 -- vacciness
 CREATE TABLE `vaccines` (
@@ -131,7 +130,7 @@ CREATE TABLE `have_vaccines` (
 -- login
 CREATE TABLE `login` (
   `username_id` int(5) NOT NULL ,
-  `fcm` int(5) NOT NULL ,
+  `fcm` int(5) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT `username_idLogin` FOREIGN KEY (`username_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
