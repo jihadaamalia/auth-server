@@ -33,7 +33,6 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 
 exports.forgot_password = function(req, res) {
     var email=req.body.email;
-    console.log(email);
     var sql_username = "SELECT * FROM `user` WHERE `email` = '"+email+"';";
     var query = db.query(sql_username, function(err, result){
         if (err) {
