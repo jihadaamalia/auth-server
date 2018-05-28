@@ -11,11 +11,11 @@ module.exports = function(app) {
 	});
 
   	//signUp
-    app.post('/signup_user', signup.user); //signup user + user_profile
+    app.post('/signup_user', signup.signUp); //signup user + user_profile
     app.post('/check_username',signup.check_username); //check username availability
 
     //signIn
-	app.post('/signin', signin.user);
+	app.post('/signin', signin.signIn);
 
 	//forgot password
 	app.post('/forgot_password', passhandler.forgot_password);

@@ -12,7 +12,7 @@ var signIn = require('./signInController');
 /**
  * SIGNUP SERVICES
  */
-exports.user=function(req , res){
+exports.signUp=function(req , res){
     self = this;
     var userData = req.body;
 
