@@ -34,8 +34,8 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 exports.forgot_password = function(req, res) {
     self = this;
     var email=req.body.email;
-    var sql_username = "SELECT * FROM `user` WHERE `email` = '"+email+"';";
-    var query = db.query(sql_username, function(err, result){
+    var check_email = "SELECT * FROM `user` WHERE `email` = '"+email+"';";
+    var query = db.query(check_email, function(err, result){
         if (err) {
             res.json({
                 status: 400,

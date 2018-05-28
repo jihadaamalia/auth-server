@@ -44,31 +44,35 @@ exports.signUp=function(req , res){
             });
             res.end();
         } else {
-            var userSql = "INSERT INTO `user`(`username`,`password`,`email`,`first_login`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', 1, CURRENT_TIMESTAMP())";
-
-            db.query(userSql, function(err, result){
-                if(err) {
-                    res.json({
-                        status: 400,
-                        error: true,
-                        error_msg: {
-                            title: 'MySQL went wrong',
-                            detail: err
-                        },
-                        response: ''
-                    });
-                    res.end();
-                } else {
-                    self.createUserProf();
-                }
-            });
+            self.createUser ();
         }
     });
 
-    self.createUserProf = function () {
-        var userProfile = "INSERT INTO user_profile (username_id) SELECT user.id FROM user WHERE user.username = '" + userData.username + "'";
+    self.createUser = function () {
+        var createUser = "INSERT INTO `user`(`username`,`password`,`email`,`first_login`,`added_at`) VALUES ('" + userData.username + "', '" + encrypted_pass + "', '" + userData.email + "', 1, CURRENT_TIMESTAMP())";
 
-        db.query(userProfile, function(err, resultProfile) {
+        db.query(createUser, function(err, result){
+            if(err) {
+                res.json({
+                    status: 400,
+                    error: true,
+                    error_msg: {
+                        title: 'MySQL went wrong',
+                        detail: err
+                    },
+                    response: ''
+                });
+                res.end();
+            } else {
+                self.createUserProf();
+            }
+        });
+    };
+
+    self.createUserProf = function () {
+        var createUserProf = "INSERT INTO user_profile (username_id) SELECT user.id FROM user WHERE user.username = '" + userData.username + "'";
+
+        db.query(createUserProf, function(err, resultProfile) {
             if (err) {
                 res.json({
                     status: 400,
@@ -87,9 +91,9 @@ exports.signUp=function(req , res){
     };
 
     self.createPet = function () {
-        var userProfile = "INSERT INTO pet (user_id) SELECT user_profile.id FROM user_profile JOIN user ON user_profile.username_id = user.id WHERE user.username = '" + userData.username + "'";
+        var createPet = "INSERT INTO pet (user_id) SELECT user_profile.id FROM user_profile JOIN user ON user_profile.username_id = user.id WHERE user.username = '" + userData.username + "'";
 
-        db.query(userProfile, function(err, resultProfile) {
+        db.query(createPet, function(err, resultProfile) {
             if (err) {
                 res.json({
                     status: 400,
@@ -120,8 +124,8 @@ exports.signUp=function(req , res){
 
 exports.check_username=function(req, res){
     var username =req.body.username;
-    var sql_username = "SELECT * FROM `user` WHERE `username`= '"+username+"'";
-    var query = db.query(sql_username, function(err, result){
+    var check_username = "SELECT * FROM `user` WHERE `username`= '"+username+"'";
+    var query = db.query(check_username, function(err, result){
         if(result.length == 0){
             res.json({
                 status: 200,
