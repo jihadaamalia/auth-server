@@ -1,0 +1,76 @@
+//sign in
+READ username, password
+FIND username AND password on database
+IF (connection db error OR db result < 1)
+    WRITE wrong username and password
+ELSE IF (db result > 1)
+    GET user profile data on database
+    SET token data
+    CREATE token from token data
+    IF (error when creating token)
+        WRITE error generate token
+    ELSE
+        WRITE token
+    END IF
+END IF
+
+
+//sign up
+READ email, username, password
+FIND email on database
+IF (connection db error)
+    WRITE mysql went wrong
+ELSE IF (email already used)
+    WRITE email already registered
+ELSE
+   INSERT userdata into user table on db
+   IF (connection db error)
+       WRITE mysql went wrong
+   ELSE
+       INSERT userid into user_profile table on db
+       IF (connection db error)
+           WRITE mysql went wrong
+       ELSE
+           INSERT userprofid into pet table on db
+           IF (connection db error)
+               WRITE mysql went wrong
+           ELSE
+               WRITER user added!
+           END IF
+       END IF
+   END IF
+END IF
+
+
+//check username
+READ username
+FIND username on database
+IF (username not found)
+    WRITE username available
+ELSE
+    WRITE username not available
+END IF
+
+
+//forgot password
+READ email
+FIND email on database
+IF (connection db error)
+    WRITE mysql went wrong
+ELSE IF (email not found)
+    WRITE email not registered
+ELSE
+    newpassword = random string
+    UPDATE password with newpassword on db
+    IF (connection db error)
+        WRITE mysql went wrong
+    ELSE
+        GENERATE email for showing newpassword
+        SEND email to user
+        IF (email sent)
+            WRITE kindly check your email
+        ELSE
+            WRITE newpassword
+        END IF
+    END IF
+END IF
