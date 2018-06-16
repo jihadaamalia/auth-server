@@ -8,16 +8,16 @@ var Cryptr = require('cryptr');
 cryptr = new Cryptr(process.env.CRYPTER_KEY);
 
 //---------------------------------------login services----------------------------------------------------------
-exports.user = function(req, res){
+exports.signIn = function(req, res){
     self = this;
     var username = req.body.username;
     var pass = req.body.password;
     var bin_pass = atob(pass);
     var encrypted_pass = cryptr.encrypt(bin_pass);
-    var sql="SELECT * FROM `user` WHERE `username`='"+username+"' and password = '"+encrypted_pass+"'";
+    var check_account="SELECT * FROM `user` WHERE `username`='"+username+"' and password = '"+encrypted_pass+"'";
 
 
-    db.query(sql, function(err, results){ //get user tables data
+    db.query(check_account, function(err, results){ //get user tables data
         if (err || results.length < 1) {
             res.json({
                 status: 404,

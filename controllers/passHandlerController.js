@@ -32,9 +32,10 @@ smtpTransport.use('compile', hbs(handlebarsOptions));
 
 
 exports.forgot_password = function(req, res) {
+    self = this;
     var email=req.body.email;
-    var sql_username = "SELECT * FROM `user` WHERE `email` = '"+email+"';";
-    var query = db.query(sql_username, function(err, result){
+    var check_email = "SELECT * FROM `user` WHERE `email` = '"+email+"';";
+    var query = db.query(check_email, function(err, result){
         if (err) {
             res.json({
                 status: 400,
@@ -58,67 +59,72 @@ exports.forgot_password = function(req, res) {
             });
             res.end();
         } else {
-            var newPassword = Math.random().toString(36).slice(-8);
-            var dec_pass = atob(newPassword);
-            var encrypted_pass = cryptr.encrypt(dec_pass);
-            var password_reset = "UPDATE `user` SET `password` = '"+encrypted_pass+"' WHERE `email`= '"+email+"'";
-            var query = db.query(password_reset, function(err, updateRes){
-                if(err){
-                    res.json({
-                        status: 500,
-                        error: true,
-                        error_msg: {
-                            title: 'Update password failed',
-                            detail: err
-                        },
-                        response: ''
-                    });
-                    res.end();
-                } else {
-                    var data = {
-                        to: result[0].email,
-                        from: email,
-                        template: 'forgot-password-email',
-                        subject: 'Password help has arrived!',
-                        context: {
-                            newPass: newPassword,
-                            name: result[0].username
-                        }
-                    };
-
-                    //send email
-                    smtpTransport.sendMail(data, function(err) {
-                        if (!err) {
-                            res.json({
-                                status: 200,
-                                error: false,
-                                error_msg: {
-                                    title: '',
-                                    detail: ''
-                                },
-                                response: 'Kindly check your email for further information'
-                            });
-                            res.end();
-                        } else {
-                            res.json({
-                                status: 500,
-                                error: true,
-                                error_msg: {
-                                    title: 'Failed to send reset email, your new password is '+ newPassword,
-                                    detail: err
-                                },
-                                response: ''
-                            });
-                            res.end();
-                        }
-                    });
-
-                }
-            });
-
+            self.passReset (result) ;
         }
 
     });
+
+    self.passReset = function (result) {
+        var newPassword = Math.random().toString(36).slice(-8);
+        var dec_pass = atob(newPassword);
+        var encrypted_pass = cryptr.encrypt(dec_pass);
+        var password_reset = "UPDATE `user` SET `password` = '"+encrypted_pass+"' WHERE `email`= '"+email+"'";
+        var query = db.query(password_reset, function(err, updateRes){
+            if(err){
+                res.json({
+                    status: 500,
+                    error: true,
+                    error_msg: {
+                        title: 'Update password failed',
+                        detail: err
+                    },
+                    response: ''
+                });
+                res.end();
+            } else {
+                var data = {
+                    to: result[0].email,
+                    from: email,
+                    template: 'forgot-password-email',
+                    subject: 'Password help has arrived!',
+                    context: {
+                        newPass: newPassword,
+                        name: result[0].username
+                    }
+                };
+                self.sendMail (data);
+            }
+        });
+    }
+
+    self.sendMail = function (data) {
+        //send email
+        smtpTransport.sendMail(data, function(err) {
+            if (!err) {
+                res.json({
+                    status: 200,
+                    error: false,
+                    error_msg: {
+                        title: '',
+                        detail: ''
+                    },
+                    response: 'Kindly check your email for further information'
+                });
+                res.end();
+            } else {
+                res.json({
+                    status: 500,
+                    error: true,
+                    error_msg: {
+                        title: 'Failed to send reset email, your new password is '+ newPassword,
+                        detail: err
+                    },
+                    response: ''
+                });
+                res.end();
+            }
+        });
+    }
 };
 
 
