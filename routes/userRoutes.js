@@ -10,6 +10,18 @@ module.exports = function(app) {
             res.end();
 	});
 
+  	//-----------------------------------------V2----------------------------------------------------
+    //users
+    app.post('/users', signup.signUp); //signup user + user_profile
+    app.post('/users/username',signup.check_username); //check username availability
+    app.post('/users/password-reset', passhandler.forgot_password);
+
+    //token
+    app.post('/token', signin.signIn);
+
+
+    //-----------------------------------------V1----------------------------------------------------
+
   	//signUp
     app.post('/signup_user', signup.signUp); //signup user + user_profile
     app.post('/check_username',signup.check_username); //check username availability
