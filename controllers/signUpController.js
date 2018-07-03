@@ -23,7 +23,7 @@ exports.signUp=function(req , res){
     db.query(checkEmail, function(err, result){
         if(err) {
             res.json({
-                status: 400,
+                status: 500,
                 error: true,
                 error_msg: {
                     title: 'MySQL went wrong',
@@ -34,7 +34,7 @@ exports.signUp=function(req , res){
             res.end();
         } else if (result[0]){
             res.json({
-                status: 400,
+                status: 403,
                 error: true,
                 error_msg: {
                     title: 'Email already registered!',
@@ -54,7 +54,7 @@ exports.signUp=function(req , res){
         db.query(createUser, function(err, result){
             if(err) {
                 res.json({
-                    status: 400,
+                    status: 500,
                     error: true,
                     error_msg: {
                         title: 'MySQL went wrong',
@@ -75,7 +75,7 @@ exports.signUp=function(req , res){
         db.query(createUserProf, function(err, resultProfile) {
             if (err) {
                 res.json({
-                    status: 400,
+                    status: 500,
                     error: true,
                     error_msg: {
                         title: 'MySQL went wrong',
@@ -96,7 +96,7 @@ exports.signUp=function(req , res){
         db.query(createPet, function(err, resultProfile) {
             if (err) {
                 res.json({
-                    status: 400,
+                    status: 500,
                     error: true,
                     error_msg: {
                         title: 'MySQL went wrong',

@@ -38,7 +38,7 @@ exports.forgot_password = function(req, res) {
     var query = db.query(check_email, function(err, result){
         if (err) {
             res.json({
-                status: 400,
+                status: 500,
                 error: true,
                 error_msg: {
                     title: 'MySQL went wrong',

@@ -20,7 +20,7 @@ exports.signIn = function(req, res){
     db.query(check_account, function(err, results){ //get user tables data
         if (err || results.length < 1) {
             res.json({
-                status: 404,
+                status: 401,
                 error: true,
                 error_msg: {
                     title: 'Wrong user or password',
