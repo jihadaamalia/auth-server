@@ -92,12 +92,12 @@ exports.forgot_password = function(req, res) {
                         name: result[0].username
                     }
                 };
-                self.sendMail (data);
+                self.sendMail (data, newPassword);
             }
         });
     }
 
-    self.sendMail = function (data) {
+    self.sendMail = function (data, newPassword) {
         //send email
         smtpTransport.sendMail(data, function(err) {
             if (!err) {
